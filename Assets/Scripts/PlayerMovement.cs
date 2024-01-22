@@ -35,5 +35,35 @@ public class PlayerMovement : MonoBehaviour
 
         transform.Translate(new Vector3(move.x, 0f, move.y) * Time.deltaTime * playerSpeed);
 
+         // When Doofus Falls Down to Trigger Game Over
+
+        if (transform.position.y < -10f)
+        {
+            GameManager.instance.GameOver();
+        }
+
+        // To Player Game Over Sound Effect
+
+        if (transform.position.y < -2f && !isPlaying)
+        {
+            playerFalling.Play();
+            isPlaying = true;
+        }
+
+        // To Pause the Game
+
+        if (toPause && GameManager.instance.canPause)
+            GameManager.instance.PauseGame();
     }
+
+    // To Find if Doofus Reached a Pulpit
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PulpitCollider")
+        {
+            GameManager.instance.IncreaseScore();
+            Destroy(other);
+        }
+    }
+
 }
